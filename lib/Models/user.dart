@@ -17,5 +17,6 @@ class User{
     this.checkInTime,
     required this.phoneNumber,
     required this.email,
-    required this.address});
+    required this.address,
+    this.userStatus = Status.notArrived});
 }

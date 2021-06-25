@@ -18,6 +18,10 @@ class _QueueScreenState extends State<QueueScreen> {
   List<User> listOfUsersToBeRendered = userList;
   List<User> filteredUserList = userList;
 
+  var buttonArrivedStyle = kInactiveButtonStyle;
+  var buttonCalledStyle = kInactiveButtonStyle;
+  var buttonFacilityStyle = kInactiveButtonStyle;
+
   Widget getAlertDialog(){
     return AlertDialog(
       content: Container(
@@ -38,6 +42,7 @@ class _QueueScreenState extends State<QueueScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Build called');
     return Scaffold(
       appBar: AppBar(title: customSearchBar, actions: [
         Padding(
@@ -92,14 +97,25 @@ class _QueueScreenState extends State<QueueScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  style: kInactiveButtonStyle,
+                  style: buttonArrivedStyle,
                   onPressed: () {
                     print(statusHeaders[1]);
                     setState(() {
-                      listOfUsersToBeRendered = filteredUserList
-                          .where(
-                              (element) => element.userStatus == Status.arrived)
-                          .toList();
+                      if(buttonArrivedStyle == kInactiveButtonStyle){
+                        buttonArrivedStyle = kActiveButtonStyle;
+                        buttonFacilityStyle = kInactiveButtonStyle;
+                        buttonCalledStyle = kInactiveButtonStyle;
+
+                        filteredUserList = userList
+                            .where(
+                                (element) => element.userStatus == Status.arrived)
+                            .toList();
+                      }
+                      else{
+                        buttonArrivedStyle = kInactiveButtonStyle;
+                        filteredUserList = userList;
+                      }
+                      listOfUsersToBeRendered = filteredUserList;
                     });
                   },
                   child: Text(statusHeaders[1]),
@@ -107,14 +123,25 @@ class _QueueScreenState extends State<QueueScreen> {
               ),
               Expanded(
                 child: OutlinedButton(
-                  style: kActiveButtonStyle,
+                  style: buttonCalledStyle,
                   onPressed: () {
                     print(statusHeaders[2]);
                     setState(() {
-                      listOfUsersToBeRendered = filteredUserList
-                          .where((element) =>
-                              element.userStatus == Status.calledToEnter)
-                          .toList();
+                      if(buttonCalledStyle == kInactiveButtonStyle){
+                        buttonCalledStyle = kActiveButtonStyle;
+                        buttonFacilityStyle = kInactiveButtonStyle;
+                        buttonArrivedStyle = kInactiveButtonStyle;
+
+                        filteredUserList = userList
+                            .where((element) =>
+                        element.userStatus == Status.calledToEnter)
+                            .toList();
+                      }
+                      else{
+                        buttonCalledStyle = kInactiveButtonStyle;
+                        filteredUserList = userList;
+                      }
+                      listOfUsersToBeRendered = filteredUserList;
                     });
                   },
                   child: Text(statusHeaders[2]),
@@ -122,14 +149,25 @@ class _QueueScreenState extends State<QueueScreen> {
               ),
               Expanded(
                 child: OutlinedButton(
-                  style: kActiveButtonStyle,
+                  style: buttonFacilityStyle,
                   onPressed: () {
                     print(statusHeaders[3]);
                     setState(() {
-                      listOfUsersToBeRendered = filteredUserList
-                          .where((element) =>
-                              element.userStatus == Status.inFacility)
-                          .toList();
+                      if(buttonFacilityStyle == kInactiveButtonStyle){
+                        buttonFacilityStyle = kActiveButtonStyle;
+                        buttonCalledStyle = kInactiveButtonStyle;
+                        buttonArrivedStyle = kInactiveButtonStyle;
+
+                        filteredUserList = userList
+                            .where((element) =>
+                        element.userStatus == Status.inFacility)
+                            .toList();
+                      }
+                      else{
+                        buttonFacilityStyle = kInactiveButtonStyle;
+                        filteredUserList = userList;
+                      }
+                      listOfUsersToBeRendered = filteredUserList;
                     });
                   },
                   child: Text(statusHeaders[3]),

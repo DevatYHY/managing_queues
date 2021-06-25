@@ -1,4 +1,5 @@
 import 'package:managing_queue/Models/user.dart';
+import 'package:flutter/material.dart';
 
 enum Status {
   notArrived,
@@ -8,7 +9,15 @@ enum Status {
   completed
 }
 
-List<User> userList = [
+List<String> statusHeaders = [
+  'Not Arrived',
+  'Arrived',
+  'Called to Enter',
+  'In Facility',
+  'Completed'
+];
+
+final List<User> userList = [
   User(name: "name1", dateOfBirth: DateTime(1993, 10, 2), phoneNumber: "1234567891", email: "email1@email.com", address: "block 1 street 1", userStatus: Status.arrived),
   User(name: "name2", dateOfBirth: DateTime(1993, 10, 3), phoneNumber: "1234567892", email: "email2@email.com", address: "block 2 street 2", userStatus: Status.arrived),
   User(name: "name3", dateOfBirth: DateTime(1993, 10, 4), phoneNumber: "1234567893", email: "email3@email.com", address: "block 3 street 3", userStatus: Status.calledToEnter),
@@ -20,7 +29,15 @@ List<User> userList = [
   User(name: "name9", dateOfBirth: DateTime(1993, 10, 10), phoneNumber: "1234567899", email: "email9@email.com", address: "block 9 street 9"),
 ];
 
+var kActiveButtonStyle = OutlinedButton.styleFrom(
+  backgroundColor: Colors.blue,
+  primary: Colors.white,
+);
 
+var kInactiveButtonStyle = OutlinedButton.styleFrom(
+  backgroundColor: Colors.white,
+  primary: Colors.blue,
+);
 
 // User(name: "name10", dateOfBirth: DateTime(1993, 10, 11), phoneNumber: "1234567810", email: "email10@email.com", address: "block 10 street 10"),
 // User(name: "name11", dateOfBirth: DateTime(1993, 10, 12), phoneNumber: "1234567811", email: "email11@email.com", address: "block 11 street 11"),

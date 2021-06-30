@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:managing_queue/Models/user.dart';
 import 'package:managing_queue/Utils/constants.dart';
-import 'package:managing_queue/Utils/render_list_from_users.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'user_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QueueScreen extends StatefulWidget {
   const QueueScreen({Key? key}) : super(key: key);
@@ -22,26 +24,135 @@ class _QueueScreenState extends State<QueueScreen> {
   var buttonCalledStyle = kInactiveButtonStyle;
   var buttonFacilityStyle = kInactiveButtonStyle;
 
-  Widget getAlertDialog(){
-    return AlertDialog(
-      content: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextButton(onPressed: (){}, child: Text('View Person details')),
-            TextButton(onPressed: (){}, child: Text('Move Person')),
-            TextButton(onPressed: (){}, child: Text('Call Person')),
-            TextButton(onPressed: (){}, child: Text('Delete Person')),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
+    List<Widget> getCardFromUserList(List<User> list) {
+      int i = -1;
+      return list.map((e) {
+        i++;
+        return Slidable(
+          key: Key(e.id.toString()),
+          actionPane: SlidableScrollActionPane(),
+          actions: <Widget>[
+            IconSlideAction(
+              caption: 'Move UP',
+              color: Colors.green[200],
+              icon: Icons.keyboard_arrow_up,
+              onTap: () {
+                setState(() {
+                  //listOfUsersToBeRendered.removeWhere((element) => element.name == e.name);
+                  // User removedUser = listOfUsersToBeRendered.removeAt(i);
+                  // Status removedStatus = removedUser.userStatus;
+                  // removedUser.userStatus = Status.inFacility;
+                  print('FROM: ${listOfUsersToBeRendered[i].userStatus}');
+                  listOfUsersToBeRendered[i].userStatus =
+                      getNextStatus(listOfUsersToBeRendered[i].userStatus);
+                  print('TO: ${listOfUsersToBeRendered[i].userStatus}');
+                });
+              },
+            )
+          ],
+          // onDismissed: (DismissDirection d) {},
+          // background: Container(
+          //   child: Text(
+          //     'Change status',
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          //   color: Colors.green[300],
+          //   alignment: Alignment.centerRight,
+          // ),
+          child: Card(
+            child: ListTile(
+              dense: true,
+              tileColor: i % 2 == 0 ? Colors.blue[50] : Colors.white,
+              leading: Icon(
+                Icons.account_circle,
+                size: 40.0,
+              ),
+              title: Text(e.name.toUpperCase()),
+              trailing: Text('${DateTime.now().hour}:${DateTime.now().minute}'),
+              onTap: () => showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Container(
+                    color: Colors.blue[100],
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      children: [
+                        Text(e.name.toUpperCase()),
+                        SizedBox(height: 8.0),
+                        Text(e.email),
+                        SizedBox(height: 8.0),
+                        Text(e.phoneNumber)
+                      ],
+                    ),
+                  ),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserProfile(
+                                  name: e.name,
+                                  phone: e.phoneNumber,
+                                  email: e.email,
+                                  dob: e.dateOfBirth,
+                                  address: e.address,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text('View Person details')),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('Move Person'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          launch('tel:${e.phoneNumber}');
+                        },
+                        child: Text('Call Person'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            userList
+                                .removeWhere((element) => element.id == e.id);
+                            filteredUserList
+                                .removeWhere((element) => element.id == e.id);
+                            listOfUsersToBeRendered
+                                .removeWhere((element) => element.id == e.id);
+                          });
+                        },
+                        child: Text('Delete Person'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }).toList();
+    }
+
+    List<Widget> getListOfItemsByStatus(Status status) {
+      List<User> currentUserList = [];
+      for (User i in listOfUsersToBeRendered) {
+        if (i.userStatus == status) {
+          currentUserList.add(i);
+        }
+      }
+      return getCardFromUserList(currentUserList);
+    }
+
     print('Build called');
     return Scaffold(
       appBar: AppBar(title: customSearchBar, actions: [
@@ -101,17 +212,16 @@ class _QueueScreenState extends State<QueueScreen> {
                   onPressed: () {
                     print(statusHeaders[1]);
                     setState(() {
-                      if(buttonArrivedStyle == kInactiveButtonStyle){
+                      if (buttonArrivedStyle == kInactiveButtonStyle) {
                         buttonArrivedStyle = kActiveButtonStyle;
                         buttonFacilityStyle = kInactiveButtonStyle;
                         buttonCalledStyle = kInactiveButtonStyle;
 
                         filteredUserList = userList
-                            .where(
-                                (element) => element.userStatus == Status.arrived)
+                            .where((element) =>
+                                element.userStatus == Status.arrived)
                             .toList();
-                      }
-                      else{
+                      } else {
                         buttonArrivedStyle = kInactiveButtonStyle;
                         filteredUserList = userList;
                       }
@@ -127,17 +237,16 @@ class _QueueScreenState extends State<QueueScreen> {
                   onPressed: () {
                     print(statusHeaders[2]);
                     setState(() {
-                      if(buttonCalledStyle == kInactiveButtonStyle){
+                      if (buttonCalledStyle == kInactiveButtonStyle) {
                         buttonCalledStyle = kActiveButtonStyle;
                         buttonFacilityStyle = kInactiveButtonStyle;
                         buttonArrivedStyle = kInactiveButtonStyle;
 
                         filteredUserList = userList
                             .where((element) =>
-                        element.userStatus == Status.calledToEnter)
+                                element.userStatus == Status.calledToEnter)
                             .toList();
-                      }
-                      else{
+                      } else {
                         buttonCalledStyle = kInactiveButtonStyle;
                         filteredUserList = userList;
                       }
@@ -153,17 +262,16 @@ class _QueueScreenState extends State<QueueScreen> {
                   onPressed: () {
                     print(statusHeaders[3]);
                     setState(() {
-                      if(buttonFacilityStyle == kInactiveButtonStyle){
+                      if (buttonFacilityStyle == kInactiveButtonStyle) {
                         buttonFacilityStyle = kActiveButtonStyle;
                         buttonCalledStyle = kInactiveButtonStyle;
                         buttonArrivedStyle = kInactiveButtonStyle;
 
                         filteredUserList = userList
                             .where((element) =>
-                        element.userStatus == Status.inFacility)
+                                element.userStatus == Status.inFacility)
                             .toList();
-                      }
-                      else{
+                      } else {
                         buttonFacilityStyle = kInactiveButtonStyle;
                         filteredUserList = userList;
                       }
@@ -175,10 +283,53 @@ class _QueueScreenState extends State<QueueScreen> {
               ),
             ],
           ),
-          RenderListFromUsers(listOfUsersToBeRendered: listOfUsersToBeRendered),
+          Flexible(
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: statusHeaders.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        color: Colors.grey,
+                        padding: EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Text(
+                            //Status.values[index].toString(),
+                            statusHeaders[index],
+                            style:
+                                TextStyle(fontSize: 23.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      ListView(
+                        shrinkWrap: true,
+                        children: getListOfItemsByStatus(Status.values[index]),
+                        physics: ClampingScrollPhysics(),
+                      ),
+                    ],
+                  );
+                }),
+          ),
         ],
       ),
     );
   }
-}
 
+  Status getNextStatus(Status userStatus) {
+    if (userStatus == Status.notArrived) {
+      return Status.arrived;
+    } else if (userStatus == Status.arrived) {
+      return Status.calledToEnter;
+    } else if (userStatus == Status.calledToEnter) {
+      return Status.inFacility;
+    } else if (userStatus == Status.inFacility) {
+      return Status.completed;
+    } else if (userStatus == Status.completed) {
+      return Status.notArrived;
+    } else
+      return Status.completed;
+  }
+}

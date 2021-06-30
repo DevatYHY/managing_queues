@@ -1,13 +1,7 @@
 import 'package:managing_queue/Models/user.dart';
 import 'package:flutter/material.dart';
 
-enum Status {
-  notArrived,
-  arrived,
-  calledToEnter,
-  inFacility,
-  completed
-}
+enum Status { notArrived, arrived, calledToEnter, inFacility, completed }
 
 List<String> statusHeaders = [
   'Not Arrived',
@@ -17,16 +11,78 @@ List<String> statusHeaders = [
   'Completed'
 ];
 
-final List<User> userList = [
-  User(name: "name1", dateOfBirth: DateTime(1993, 10, 2), phoneNumber: "1234567891", email: "email1@email.com", address: "block 1 street 1", userStatus: Status.arrived),
-  User(name: "name2", dateOfBirth: DateTime(1993, 10, 3), phoneNumber: "1234567892", email: "email2@email.com", address: "block 2 street 2", userStatus: Status.arrived),
-  User(name: "name3", dateOfBirth: DateTime(1993, 10, 4), phoneNumber: "1234567893", email: "email3@email.com", address: "block 3 street 3", userStatus: Status.calledToEnter),
-  User(name: "name4", dateOfBirth: DateTime(1993, 10, 5), phoneNumber: "1234567894", email: "email4@email.com", address: "block 4 street 4", userStatus: Status.notArrived),
-  User(name: "name5", dateOfBirth: DateTime(1993, 10, 6), phoneNumber: "1234567895", email: "email5@email.com", address: "block 5 street 5", userStatus: Status.calledToEnter),
-  User(name: "name6", dateOfBirth: DateTime(1993, 10, 7), phoneNumber: "1234567896", email: "email6@email.com", address: "block 6 street 6", userStatus: Status.completed),
-  User(name: "name7", dateOfBirth: DateTime(1993, 10, 8), phoneNumber: "1234567897", email: "email7@email.com", address: "block 7 street 7", userStatus: Status.inFacility),
-  User(name: "name8", dateOfBirth: DateTime(1993, 10, 9), phoneNumber: "1234567898", email: "email8@email.com", address: "block 8 street 8", userStatus: Status.inFacility),
-  User(name: "name9", dateOfBirth: DateTime(1993, 10, 10), phoneNumber: "1234567899", email: "email9@email.com", address: "block 9 street 9"),
+List<User> userList = [
+  User(
+      id: 1,
+      name: "name1",
+      dateOfBirth: DateTime(1993, 10, 2),
+      phoneNumber: "1234567891",
+      email: "email1@email.com",
+      address: "block 1 street 1 block 1 street 1 block 1 street 1 block 1 street 1",
+      userStatus: Status.arrived),
+  User(
+      id: 2,
+      name: "name2",
+      dateOfBirth: DateTime(1993, 10, 3),
+      phoneNumber: "1234567892",
+      email: "email2@email.com",
+      address: "block 2 street 2",
+      userStatus: Status.arrived),
+  User(
+      id: 3,
+      name: "name3",
+      dateOfBirth: DateTime(1993, 10, 4),
+      phoneNumber: "1234567893",
+      email: "email3@email.com",
+      address: "block 3 street 3",
+      userStatus: Status.calledToEnter),
+  User(
+      id: 4,
+      name: "name4",
+      dateOfBirth: DateTime(1993, 10, 5),
+      phoneNumber: "1234567894",
+      email: "email4@email.com",
+      address: "block 4 street 4",
+      userStatus: Status.notArrived),
+  User(
+      id: 5,
+      name: "name5",
+      dateOfBirth: DateTime(1993, 10, 6),
+      phoneNumber: "1234567895",
+      email: "email5@email.com",
+      address: "block 5 street 5",
+      userStatus: Status.calledToEnter),
+  User(
+      id: 6,
+      name: "name6",
+      dateOfBirth: DateTime(1993, 10, 7),
+      phoneNumber: "1234567896",
+      email: "email6@email.com",
+      address: "block 6 street 6",
+      userStatus: Status.completed),
+  User(
+      id: 7,
+      name: "name7",
+      dateOfBirth: DateTime(1993, 10, 8),
+      phoneNumber: "1234567897",
+      email: "email7@email.com",
+      address: "block 7 street 7",
+      userStatus: Status.inFacility),
+  User(
+      id: 8,
+      name: "name8",
+      dateOfBirth: DateTime(1993, 10, 9),
+      phoneNumber: "1234567898",
+      email: "email8@email.com",
+      address: "block 8 street 8",
+      userStatus: Status.inFacility),
+  User(
+      id: 9,
+      name: "name9",
+      dateOfBirth: DateTime(1993, 10, 10),
+      phoneNumber: "1234567899",
+      email: "email9@email.com",
+      address: "block 9 street 9"),
 ];
 
 var kActiveButtonStyle = OutlinedButton.styleFrom(
